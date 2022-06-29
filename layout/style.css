@@ -4,8 +4,14 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+  }
+
 body {
     font-family: 'Roboto', sans-serif;
+    min-height: 100%;
+    background-color: #FAFAFA;
 }
 
 h2 {
@@ -18,6 +24,8 @@ h3 {
     font-size: 20px;
 }
 
+
+/******** Home ********/
 
 /* Header */
 
@@ -145,3 +153,153 @@ header {
     width: 100%;
 }
 
+/******** Quizz ********/
+
+#header-quizz {
+    background: url(imgs/simpsons.jpg), rgba(0, 0, 0, 0.6);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    
+    width: 100%;
+    height: 10vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 39px;
+}
+
+#conteiner-perguntas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#resposta,
+.pergunta {
+    width: 40%;
+    margin-top: 20px;
+    padding: 1vw;
+    background-color: white;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+}
+
+#titulo-resp,
+.titulo-pergunta {
+    width: 100%;
+    padding: 30px 0;
+    background-color: #EC362D;
+    text-align: center;
+    color: white;
+    font-size: 23px;
+    font-weight: 700;
+}
+
+/* Box-perguntas */
+
+.pergunta {
+    padding: 1.5vw;
+}
+
+.titulo-pergunta {
+    background-color: aqua;
+}
+
+.opcoes {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.opcoes.respondida img,
+.opcoes.respondida span {
+    opacity: 0.5;
+}
+
+.opcoes.respondida span {
+    color: #FF4B4B;
+}
+
+.opcao {
+    width: 48%;
+    height: 200px;
+    margin-top: 1vw;
+}
+
+.opcao img {
+    max-height: 175px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.opcao span {
+    padding-top: 10px;
+    font-weight: 700;
+    display: block;
+    cursor: pointer;
+}
+
+.opcao.selecionada img,
+.opcao.selecionada span {
+    opacity: 1;
+}
+
+.opcao.correta span {
+    color: #009C22;
+}
+
+/*  Resposta Quizz */
+
+#resposta  div:nth-child(2) {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#resposta img {
+    width: 50%;
+    max-height: 270px;
+}
+
+#resposta p {
+    width: 50%;
+    padding: 0 1vw;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* Botões Quizz */
+
+#btns-retorno {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2vw;
+}
+
+#btns-retorno.nao-respondido {
+    display: none;
+}
+
+#btns-retorno button {
+    border: none;
+    border-radius: 15px;
+    color: white;
+    background-color: #EC362D;
+    font-weight: 400;
+    font-size: 22px;
+    padding: 15px;
+    cursor: pointer;
+}
+
+#btns-retorno a {
+    text-decoration: none;
+    color:#B9B9B9;
+    margin-top: 1vw;
+    margin-bottom: 3vw;
+    font-size: 18px;
+}
