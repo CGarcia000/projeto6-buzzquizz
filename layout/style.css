@@ -24,6 +24,12 @@ h3 {
     font-size: 20px;
 }
 
+ion-icon {
+    color: black;
+    font-size: 30px;
+    cursor: pointer;
+}
+
 
 /******** Home ********/
 
@@ -69,6 +75,7 @@ header {
     align-items: center;
     display: flex;
     justify-content: center;
+    cursor: pointer;
 }
 
 #seus-quizzes .titulo-btn {
@@ -137,7 +144,9 @@ header {
     display:block;
     width: 30%;
     margin: 10px 0;
-    
+    background-color: black;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
 .quizz h3 {
@@ -151,6 +160,8 @@ header {
     border-radius: 10px;
     height: 180px;
     width: 100%;
+    -webkit-mask-image: linear-gradient(black, transparent);
+    mask-image: linear-gradient(black, transparent);
 }
 
 /******** Quizz ********/
@@ -270,11 +281,13 @@ header {
     padding: 0 1vw;
     font-weight: 700;
     font-size: 18px;
+    color: #484848;
 }
 
 /* Botões Quizz */
 
-#btns-retorno {
+#btns-retorno,
+#btns-settings {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -285,7 +298,8 @@ header {
     display: none;
 }
 
-#btns-retorno button {
+#btns-retorno button,
+#btns-settings button {
     border: none;
     border-radius: 15px;
     color: white;
@@ -296,10 +310,85 @@ header {
     cursor: pointer;
 }
 
-#btns-retorno a {
+#btns-retorno a,
+#btns-settings a {
     text-decoration: none;
     color:#B9B9B9;
     margin-top: 1vw;
     margin-bottom: 3vw;
     font-size: 18px;
+}
+
+
+/* Criar Quizz */
+
+#container-settings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4vw;
+}
+
+.bloco-opcoes {
+    width: 40%;
+    margin-top: 30px;
+    padding: 1vw;
+    background-color: white;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+}
+
+.titulo-bloco {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: .5vw 0;
+}
+
+.bloco-opcoes > h3{
+    margin-top: 1vw;
+    margin-bottom: .5vw;
+}
+
+.bloco-opcoes > input {
+    margin-bottom: .5vw;
+    width: 100%;
+    border: 1px solid #BABABA;
+    border-radius:  5px;
+    padding: 10px;
+    font-size: 20px;
+    color: #BABABA;
+}
+
+.bloco-opcoes.aberto ion-icon {
+    display: none;
+}
+
+
+
+#quizz-feito {
+    margin-top: 30px;
+    position: relative;
+    text-align: center;
+    color: white;
+    display:block;
+    width: 35%;
+    background-color: black;
+    border-radius: 10px;
+}
+
+#quizz-feito h3 {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    z-index: 1;
+    padding: .5vw;
+}
+
+#quizz-feito img {
+    border-radius: 10px;
+    height: auto;
+    max-height: 280px;
+    width: 100%;
+    -webkit-mask-image: linear-gradient(black, transparent);
+    mask-image: linear-gradient(black, transparent);
 }
