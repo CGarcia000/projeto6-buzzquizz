@@ -4,6 +4,7 @@ let URLquizz;
 let qtdPerguntas;
 let qtdNiveis;
 let telaPerguntasQuizz;
+let telaDecidirNiveis;
 let perguntaTitulo;
 let corDeFundoPergunta;
 let respostaCorreta;
@@ -59,7 +60,7 @@ function incluirCaixasPerguntas() {
     for (let i = 0; i < qtdPerguntas; i++) {
 
         telaPerguntasQuizz.innerHTML = `
-        <div class="titulo-bloco pergunta${i + 1}">
+        <div class="titulo-bloco">
             <h2>Crie suas perguntas</h2>
             <div class="numeroPergunta">
                 <h2 class="instrucaoSubtitulo">Pergunta ${i + 1}</h2>
@@ -98,7 +99,7 @@ function checagemPerguntas() {
     for (let i = 0; i < qtdPerguntas; i++) {
         perguntaTitulo = document.querySelector(`.pergunta${i + 1} .numeroPergunta input:nth-child(2)`).value;
         corDeFundoPergunta = document.querySelector(`.pergunta${i + 1} .numeroPergunta input:nth-child(3)`).value;
-        corPergunta
+
         if (perguntaTitulo.length >= 20 && corDeFundoPergunta.startsWith('#') && corDeFundoPergunta) {
             checkingRespostaCorreta();
         } else {
@@ -108,5 +109,65 @@ function checagemPerguntas() {
 }
 
 function checkingRespostaCorreta() {
+    for (let i = 0; i < qtdPerguntas; i++) {
+        respostaCorreta = document.querySelector(`.pergunta${i + 1} .respostaCorreta input:nth-child(2)`).value;
+        URLrespostaCorreta = document.querySelector(`.pergunta${i + 1} .numeroPergunta input:nth-child(3)`).value;
 
+        if (respostaCorreta !== undefined && (URLrespostaCorreta.startsWith('http://') || URLrespostaCorreta.startsWith('https://'))) {
+            vaiParaNiveis();            
+        } else {
+            alert("Preencha as informações corretamente!");
+        }
+    }     
+}
+
+function vaiParaNiveis() {
+    containerFromHTML.innerHTML = `
+    <div id="container-settings">
+        <h2>Agora, decida os níveis!</h2>
+    </div>
+    `    
+
+    incluirCaixasNiveis();
+}
+
+function incluirCaixasNiveis() {
+    telaDecidirNiveis = document.querySelector(".container-settings");
+
+    for(let i = 0; i < qtdNiveis; i++) {
+        telaDecidirNiveis.innerHTML += `
+        <div class="titulo-bloco">
+            <h2>Nível ${i + 1}</h2>
+            <input type="text" name="tituloNivel" placeholder="Título do nível">
+            <input type="text" name="acertoPorcentagem" placeholder="% de acerto mínima">
+            <input type="text" name="URLnivel" placeholder="URL da imagem do nível">
+            <input type="text" name="descricaoNivel" placeholder="Descrição do nível">
+        </div>
+        `
+    }
+    inserirBotaoFinal();
+}
+
+function inserirBotaoFinal() {
+    telaDecidirNiveis.innerHTML += `
+    <div id="btns-settings" class="quizz-completo" onclick="vaiParaSucessoQuizz()">
+        <button>Finalizar Quizz</button>
+    </div>
+    `
+}
+
+function vaiParaSucessoQuizz() {
+    containerFromHTML.innerHTML = `
+    <div id="container-settings">
+        <h2>Comece pelo começo</h2>
+        <div>
+            <img src="imgs/simpsons.jpg">
+            <h3>Acerte os personagens corretos dos Simpsons e prove seu amor!</h3>
+        </div>
+        <div id="btns-settings">
+            <button>Acessar Quizz</button>
+        </div>
+        <a href="">Voltar pra home</a>
+    </div>
+    ` 
 }
