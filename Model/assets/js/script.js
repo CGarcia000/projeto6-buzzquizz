@@ -34,7 +34,7 @@ function checkingBlocoOpcoes() {
     qtdPerguntas = Number(document.querySelector(".titulo-bloco input:nth-child(3)").value);
     qtdNiveis = Number(document.querySelector(".titulo-bloco input:nth-child(4)").value);
 
-    if (tituloQuizz.length >= 20 && (URLquizz.startsWith('http://') || URLquizz.startsWith('https://')) && qtdPerguntas >= 3 && qtdNiveis >= 2) {
+    if (tituloQuizz.length >= 20 && tituloQuizz.length <= 65 && (URLquizz.startsWith('http://') || URLquizz.startsWith('https://')) && qtdPerguntas >= 3 && qtdNiveis >= 2) {
         vaiParaPerguntas();
     } else {
         alert("Preencha as informações corretamente!");
