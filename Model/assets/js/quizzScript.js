@@ -188,6 +188,3 @@ function fimQuizz(quizz, intervalCheck) {
 function reinicia() {
     window.location.reload();
 }
-
-
-chamaPromisse(294);
