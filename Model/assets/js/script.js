@@ -62,16 +62,6 @@ function newObjectQuizz(questions, levels) {
         levels: []
     }
 
-    const pergunta = {
-                        title: "",
-                        color: "",
-                        answers: []
-                    }
-
-    for (let i = 0; i < questions; i++) {
-        newQuizz.questions.push(pergunta);
-    }
-
     const niveis = {
                         title: "",
                         image: "",
@@ -95,8 +85,6 @@ function vaiParaPerguntas() {
     incluirCaixasPerguntas();
 }
 
-
-
 function incluirCaixasPerguntas() {
     telaPerguntasQuizz = document.querySelector(".container-settings");
 
@@ -108,7 +96,7 @@ function incluirCaixasPerguntas() {
             <div class="numeroPergunta">
                 <h2 class="instrucaoSubtitulo">Pergunta ${i + 1}</h2>
                 <input class="textoDaPergunta" type="text" name="pergunta" placeholder="Texto da pergunta" autocomplete>
-                <input class="corPergunta" type="text" name="corDeFundoPergunta" maxlength="7" placeholder="Cor de fundo da pergunta">
+                <input class="corPergunta" type="color" name="corDeFundoPergunta" placeholder="Cor de fundo da pergunta">
             </div>
             <div class="respostaCorreta">
                 <h2 class="instrucaoSubtitulo">Resposta correta</h2>
@@ -118,7 +106,7 @@ function incluirCaixasPerguntas() {
             <div class="respostasIncorretas">
                 <h2 class="instrucaoSubtitulo">Respostas incorretas</h2>
                 <input class="respostaErradaTexto" type="text" name="respostaIncorreta1" placeholder="Resposta incorreta 1" autocomplete>
-                <input class="respostaErradaImagem" type="text" name="URLrespostaIncorreta1" placeholder="URL da imagem 1" autocomplete>
+                <input class="respostaErradaImagem" type="text" pattern="^(https|http)://" name="URLrespostaIncorreta1" placeholder="URL da imagem 1" autocomplete>
                 <input type="text" name="respostaIncorreta2" placeholder="Resposta incorreta 2" autocomplete>
                 <input type="text" name="URLrespostaIncorreta2" placeholder="URL da imagem 2" autocomplete>
                 <input type="text" name="respostaIncorreta3" placeholder="Resposta incorreta 3" autocomplete>
@@ -160,14 +148,6 @@ function checkingDadosPerguntas() {
         const imagemRespostaCorreta = boxDePergunta[i].querySelector(".respostaCorretaImagem").value;
         ehValido = perguntaTexto.length >= 20 && textoRespostaCorreta !== undefined && (imagemRespostaCorreta.startsWith('http://') || imagemRespostaCorreta.startsWith('https://'));
 
-        console.log(minimoDeRespostaErrada);
-        console.log(respostaIncorreta);
-        console.log(perguntaTexto);
-        console.log(corDaPergunta);
-        console.log(textoRespostaCorreta);
-        console.log(imagemRespostaCorreta);
-        console.log(ehValido);
-
         if(ehValido) {
             console.log("Passou no primeiro if")
             const perguntaDepoisDeNovoValor = {
@@ -176,50 +156,53 @@ function checkingDadosPerguntas() {
                 answers: []
             }
 
-            console.log(perguntaDepoisDeNovoValor);
-            console.log(perguntaDepoisDeNovoValor.title);
-            perguntaDepoisDeNovoValor.title = newQuizzUsuario.questions[1].title;
-            console.log(perguntaDepoisDeNovoValor);
-            //newQuizzUsuario.boxDePerguntas[i] = perguntaDepoisDeNovoValor;
-
             const respostaDepoisDeNovoValor = {
                 text: textoRespostaCorreta,
                 image: imagemRespostaCorreta,
                 isCorrectAnswer: true
             }
 
-            newQuizzUsuario.boxDePergunta[i].answers = [respostaDepoisDeNovoValor];
+            perguntaDepoisDeNovoValor.answers.push(respostaDepoisDeNovoValor);
+
+            /* const textoRespostasIncorretas = respostaIncorreta.querySelectorAll(".respostaErradaTexto");
+            const imagemRespostasIncorretas = respostaIncorreta.querySelectorAll(".respostaErradaImagem");
+            for(let j = 0; j < textoRespostasIncorretas; j++) {
+                perguntaDepoisDeNovoValor.answers.push( {
+                    text: textoRespostasIncorretas[j].value,
+                    image: imagemRespostasIncorretas[j].value,
+                    isCorrectAnswer: false
+                });
+            } */
+
+            const respostaErrada = respostaIncorreta[0].querySelectorAll(".respostaErradaTexto");
+            const imagemRespostaErrada = respostaIncorreta[0].querySelectorAll(".respostaErradaImagem");
+            for(let k = 0; k < respostaIncorreta.length; k++) {
+                ehValido = tituloQuizz.length >= 20 && (imagemRespostaErrada[k].startsWith('http://') || imagemRespostaErrada[k].startsWith('https://'));
+
+                if(ehValido) {
+                    const respostaErradaDepoisDeNovoValor = {
+                        text: respostaErrada[k].value,
+                        image: imagemRespostaErrada[k].value,
+                        isCorrectAnswer: false
+                    }
+
+                    perguntaDepoisDeNovoValor.answers.push(respostaErradaDepoisDeNovoValor);
+                    minimoDeRespostaErrada = true;
+                    dadosCertos.push(true);
+                } else {
+                    //Alerta
+                    //perguntaDepoisDeNovoValor.answers = []
+                    return;
+                }
+            }
+
             dadosCertos.push(true);
+            newQuizzUsuario.questions.push(perguntaDepoisDeNovoValor);
         } else {
             dadosCertos.push(false);
         }
-
-        console.log(minimoDeRespostaErrada);
-        console.log(respostaIncorreta);
-        console.log(perguntaTexto);
-        console.log(corDaPergunta);
-        console.log(textoRespostaCorreta);
-        console.log(imagemRespostaCorreta);
-        console.log(ehValido);
-
-        for(let j = 0; j < respostaIncorreta.length; j++) {
-            const respostaErrada = respostaIncorreta[j].querySelector(".respostaErradaTexto").value;
-            const imagemRespostaErrada = respostaIncorreta[j].querySelector(".respostaErradaImagem").value;
-            ehValido = tituloQuizz.length >= 20 && (imagemRespostaErrada.startsWith('http://') || imagemRespostaErrada.startsWith('https://'));
-
-            if(ehValido) {
-                const respostaErradaDepoisDeNovoValor = {
-                    text: respostaErrada,
-                    image: imagemRespostaErrada,
-                    isCorrectAnswer: false
-                }
-
-                newQuizzUsuario.boxDePergunta[i].answers.push(respostaErradaDepoisDeNovoValor);
-                minimoDeRespostaErrada = true;
-                dadosCertos.push(true);
-            }
-        }
     }
+
     ehValido = lista(dadosCertos);
 
     if(minimoDeRespostaErrada) {
@@ -229,7 +212,11 @@ function checkingDadosPerguntas() {
     }
 }
 
-function checagemPerguntas() {
+function checagemRequisitosPerguntas() {
+    vaiParaNiveis();
+}
+
+/*function checagemPerguntas() {
     for (let i = 0; i < qtdPerguntas; i++) {
         perguntaTitulo = document.querySelector(`.pergunta${i + 1} .numeroPergunta input:nth-child(2)`).value;
         corDeFundoPergunta = document.querySelector(`.pergunta${i + 1} .numeroPergunta input:nth-child(3)`).value;
@@ -253,7 +240,7 @@ function checkingRespostaCorreta() {
             alert("Preencha as informações corretamente!");
         }
     }     
-}
+} */
 
 function vaiParaNiveis() {
     containerFromHTML.innerHTML = `
