@@ -1,17 +1,22 @@
 const href = "https://mock-api.driven.com.br/api/v7/buzzquizz/quizzes"
-const id_test = "90"
 
 const body = document.querySelector('div');
+let containerPerguntas;
 
-const quizzPromise = axios.get(`${href}/${id_test}`);
-quizzPromise.then(res => {
-    const quizz = res.data;
-    console.log(quizz);
-    montaQuizz(quizz);
-});
-quizzPromise.catch(e => {
-    console.log(e)
-});
+let pontuacao = 0;
+const arrTdsOpcoes = [];
+
+function chamaPromisse(id_test) {
+    const quizzPromise = axios.get(`${href}/${id_test}`);
+    quizzPromise.then(res => {
+        const quizz = res.data;
+        montaQuizz(quizz);
+    });
+    quizzPromise.catch(e => {
+        console.log(e)
+    });
+}
+
 
 function montaQuizz(quizz) {
     body.innerHTML = '';
@@ -23,9 +28,11 @@ function montaQuizz(quizz) {
     body.appendChild(quizzHeader);
 
     
-    const containerPerguntas = document.createElement('div');
+    containerPerguntas = document.createElement('div');
     containerPerguntas.setAttribute("id", "conteiner-perguntas");
-    
+
+    pontoPergunta = 100/quizz.questions.length;
+
     for (let i = 0; i < quizz.questions.length; i++) {
         const perguntaLoop = quizz.questions[i];
         perguntaLoop.answers.sort(() => 0.5 - Math.random());
@@ -45,55 +52,27 @@ function montaQuizz(quizz) {
         const opcoes = document.createElement('div');
         opcoes.classList.add('opcoes');
 
+        const arrOpcoesPergunta = [];
+
         for (let j = 0; j < perguntaLoop.answers.length; j++) {
-            const opcao = criaOpcao(perguntaLoop.answers[j]);
+            const { opcao, objOpcao } = criaOpcao(perguntaLoop.answers[j], pontoPergunta);
+            objOpcao.pergunta = i;
+            arrOpcoesPergunta.push(objOpcao);
             opcoes.appendChild(opcao);
         }
 
+        arrTdsOpcoes.push(arrOpcoesPergunta)
         pergunta.append(opcoes);
 
-    //     console.log(perguntaLoop.answers);
-    //     containerPerguntas.innerHTML += `
-    //     <div class="e">
-    //         <div class="titulo-pergunta" style="background-color: ${perguntaLoop.color};">
-    //             ${perguntaLoop.title}
-    //         </div>
-    //         <div class="opcoes">
-
-    //             <div class="opcao">
-    //                 <img src="${perguntaLoop.answers[0].image}" alt="">
-    //                 <span>${perguntaLoop.answers[0].text}</span>
-    //             </div>
-
-    //             <div class="opcao">
-    //                 <img src="${perguntaLoop.answers[1].image}" alt="">
-    //                 <span>${perguntaLoop.answers[1].text}</span>
-    //             </div>
-
-    //             <div class="opcao">
-    //                 <img src="${perguntaLoop.answers[2].image}" alt="">
-    //                 <span>${perguntaLoop.answers[2].text}</span>
-    //             </div>
-
-    //             <div class="opcao">
-    //                 <img src="${perguntaLoop.answers[3].image}" alt="">
-    //                 <span>${perguntaLoop.answers[3].text}</span>
-    //             </div>
-    //         </div>
-    //     </div>
-    //     `
         containerPerguntas.append(pergunta);
     }
-
-
     body.appendChild(containerPerguntas);
 
-    // getResposta(quizz);
+    checkCompleto(quizz);
 }
 
-
-function criaOpcao(answer) {
-    // criar um objeto q vai ter a opcao e se ela é correta ou n, ai dá pra fazer essa discriminação entre as options;
+function criaOpcao(answer, pontoPergunta) {
+    const objOpcao = {};
 
     const opcao = document.createElement('div');
     opcao.classList.add('opcao')
@@ -108,30 +87,98 @@ function criaOpcao(answer) {
     opcao.appendChild(span);
 
     opcao.addEventListener('click', () => {
-        listenerOpcao(answer, opcao)
+        listenerOpcao(opcao, objOpcao, pontoPergunta);
     })
 
-    return opcao;
+    objOpcao.domEl = opcao;
+    objOpcao.isCorrect = answer.isCorrectAnswer == 'false'? false : answer.isCorrectAnswer;
+
+    return {opcao, objOpcao};
 }
 
-function listenerOpcao(objAnswer, opcao) {
-    retiraELPergunta(opcao.parentElement);
+function listenerOpcao(opcao, infoOpcoes, pontoPergunta) {
     opcao.parentElement.classList.add('respondida');
     opcao.classList.add('selecionada');
-    if (objAnswer.isCorrectAnswer) opcao.classList.add('correta');
+    verificaCorreta(infoOpcoes, pontoPergunta);
 }
 
-function getResposta(quizz) {
-    const opcoes = document.getElementsByClassName('opcao');
-    for (let i = 0; i < opcoes.length; i++) {
-        const opcao = opcoes[i];
-        console.log(opcao.childNodes[3]);
-        // if (opcao.childNodes[1].currentSrc == quizz.)
+function verificaCorreta(infoOpcao, pontoPergunta) {
+    const arrOpcoesPergunta = arrTdsOpcoes[infoOpcao.pergunta];
+    for (let i = 0; i < arrOpcoesPergunta.length; i++) {
+        if (arrOpcoesPergunta[i].isCorrect) {
+            arrOpcoesPergunta[i].domEl.classList.add('correta');
+        }
 
+        if (arrOpcoesPergunta[i].domEl.classList.value.includes('correta')
+            && arrOpcoesPergunta[i].domEl.classList.value.includes('selecionada')) {
+                pontuacao += pontoPergunta;
+            }
+        
+        arrOpcoesPergunta[i].domEl.replaceWith(arrOpcoesPergunta[i].domEl.cloneNode(true)); 
     }
 }
 
-function retiraELPergunta(parent) {
-    const arrOpcoes = parent.childNodes;
-    
+function checkCompleto(quizz) {
+    const intervalCheck = setInterval(() => {
+        const perguntasRespondidas = document.querySelectorAll('.respondida');
+        if (perguntasRespondidas.length === arrTdsOpcoes.length && arrTdsOpcoes.length !== 0) {
+            fimQuizz(quizz, intervalCheck);
+        }
+    }, 100);
 }
+
+function fimQuizz(quizz, intervalCheck) {
+    clearInterval(intervalCheck);
+
+    pontuacao = Math.round(pontuacao);
+
+    const levels = quizz.levels;
+    for(let i = 0; i < levels.length; i++) {
+        if (pontuacao > levels[levels.length - i - 1].minValue) {
+            containerPerguntas.innerHTML += `
+            <div id="resposta">
+                <div id="titulo-resp">
+                    ${levels[levels.length - i - 1].title}
+                </div>
+        
+                <div>
+                    <img src="${levels[levels.length - i - 1].image}" alt="">
+        
+                    <p>${levels[levels.length - i - 1].text}</p>
+                </div>
+            </div>
+            `
+        }
+    }
+
+    if (!containerPerguntas.innerHTML.includes('<div id="resposta">')) {
+        containerPerguntas.innerHTML += `
+            <div id="resposta">
+                <div id="titulo-resp">
+                    ${levels[0].title}
+                </div>
+        
+                <div>
+                    <img src="${levels[0].image}" alt="">
+        
+                    <p>${levels[0].text}</p>
+                </div>
+            </div>
+            `
+    }
+
+    body.innerHTML += `
+    <div id="btns-retorno" class="">
+        <button onclick="reinicia()">Reiniciar Quizz</button>
+
+        <a href="index.html">Voltar pra home</a>
+    </div>
+    `  
+}
+
+function reinicia() {
+    window.location.reload();
+}
+
+
+chamaPromisse(99);
