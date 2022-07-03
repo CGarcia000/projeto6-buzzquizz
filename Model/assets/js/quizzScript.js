@@ -5,6 +5,7 @@ let containerPerguntas;
 
 let pontuacao = 0;
 const arrTdsOpcoes = [];
+const arrPeguntas = [];
 
 function chamaPromisse(id_test) {
     const quizzPromise = axios.get(`${href}/${id_test}`);
@@ -64,8 +65,11 @@ function montaQuizz(quizz) {
         arrTdsOpcoes.push(arrOpcoesPergunta)
         pergunta.append(opcoes);
 
+        arrPeguntas.push(pergunta);
+
         containerPerguntas.append(pergunta);
     }
+
     body.appendChild(containerPerguntas);
 
     checkCompleto(quizz);
@@ -116,6 +120,10 @@ function verificaCorreta(infoOpcao, pontoPergunta) {
         
         arrOpcoesPergunta[i].domEl.replaceWith(arrOpcoesPergunta[i].domEl.cloneNode(true)); 
     }
+    setTimeout(() => {
+        if (infoOpcao.pergunta !== arrTdsOpcoes.length - 1) arrPeguntas[infoOpcao.pergunta + 1].scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+        else document.getElementById('resposta').scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+    }, 2000)
 }
 
 function checkCompleto(quizz) {
@@ -134,7 +142,7 @@ function fimQuizz(quizz, intervalCheck) {
 
     const levels = quizz.levels;
     for(let i = 0; i < levels.length; i++) {
-        if (pontuacao > levels[levels.length - i - 1].minValue) {
+        if (pontuacao >= levels[levels.length - i - 1].minValue) {
             containerPerguntas.innerHTML += `
             <div id="resposta">
                 <div id="titulo-resp">
@@ -148,6 +156,7 @@ function fimQuizz(quizz, intervalCheck) {
                 </div>
             </div>
             `
+            break;
         }
     }
 
@@ -181,4 +190,4 @@ function reinicia() {
 }
 
 
-chamaPromisse(99);
+chamaPromisse(294);
