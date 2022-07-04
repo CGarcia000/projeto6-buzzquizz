@@ -1,3 +1,4 @@
+<script src="quizzScript.js"></script>
 let containerFromHTML = document.querySelector(".container-settings");
 let tituloQuizz;
 let URLquizz;
@@ -76,10 +77,10 @@ function newObjectQuizz(questions, levels) {
 }
 
 function vaiParaPerguntas() {
-    containerFromHTML.innerHTML = `
-    <div id="container-settings">
-        <h2>Comece pelo começo</h2>
-    </div>
+    body.innerHTML = `
+        <div id="container-settings">
+            <h2>Comece pelo começo</h2>
+        </div>
     `
 
     incluirCaixasPerguntas();
@@ -164,7 +165,7 @@ function checkingDadosPerguntas() {
 
             perguntaDepoisDeNovoValor.answers.push(respostaDepoisDeNovoValor);
 
-            /* const textoRespostasIncorretas = respostaIncorreta.querySelectorAll(".respostaErradaTexto");
+            const textoRespostasIncorretas = respostaIncorreta.querySelectorAll(".respostaErradaTexto");
             const imagemRespostasIncorretas = respostaIncorreta.querySelectorAll(".respostaErradaImagem");
             for(let j = 0; j < textoRespostasIncorretas; j++) {
                 perguntaDepoisDeNovoValor.answers.push( {
@@ -172,7 +173,7 @@ function checkingDadosPerguntas() {
                     image: imagemRespostasIncorretas[j].value,
                     isCorrectAnswer: false
                 });
-            } */
+            } 
 
             const respostaErrada = respostaIncorreta[0].querySelectorAll(".respostaErradaTexto");
             const imagemRespostaErrada = respostaIncorreta[0].querySelectorAll(".respostaErradaImagem");
@@ -190,8 +191,8 @@ function checkingDadosPerguntas() {
                     minimoDeRespostaErrada = true;
                     dadosCertos.push(true);
                 } else {
-                    //Alerta
-                    //perguntaDepoisDeNovoValor.answers = []
+                    alert("Preencha as informações corretamente!")
+                    perguntaDepoisDeNovoValor.answers = []
                     return;
                 }
             }
@@ -216,7 +217,7 @@ function checagemRequisitosPerguntas() {
     vaiParaNiveis();
 }
 
-/*function checagemPerguntas() {
+function checagemPerguntas() {
     for (let i = 0; i < qtdPerguntas; i++) {
         perguntaTitulo = document.querySelector(`.pergunta${i + 1} .numeroPergunta input:nth-child(2)`).value;
         corDeFundoPergunta = document.querySelector(`.pergunta${i + 1} .numeroPergunta input:nth-child(3)`).value;
@@ -240,7 +241,7 @@ function checkingRespostaCorreta() {
             alert("Preencha as informações corretamente!");
         }
     }     
-} */
+}
 
 function vaiParaNiveis() {
     containerFromHTML.innerHTML = `
